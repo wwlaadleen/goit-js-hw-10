@@ -1,4 +1,4 @@
-import '../css/styles.css';
+ import '../css/styles.css';
 import fetchCountries from './APIservice/fetchCountries';
 import Notiflix from 'notiflix';
 import debounce from 'lodash.debounce';
@@ -17,7 +17,8 @@ refs.searchInputEl.addEventListener(
 
 function onSearchInput(event) {
   let searchValue = event.target.value.trim();
-  fetchCountries(searchValue).then(res => {
+  if (searchValue){
+    fetchCountries(searchValue).then(res => {
     if (res.length > 10) {
       refs.countryListEl.innerHTML = '';
 
@@ -40,23 +41,27 @@ function onSearchInput(event) {
       refs.countryListEl.innerHTML = '';
 
       Notiflix.Notify.failure('Oops, there is no country with that name');
-    }
-  });
-}
-
+      }
+    });
+  } else {
+      refs.countryListEl.innerHTML = '';
+  }
+  return;
+  }
+  
 function renderCountries(res) {
   return res
     .map(
-      e => `
-                <div class='country-list__item'>
-                    <img class='country-list__flag' src='${e.flag}'
-                        width="30"
-                    >
-                    <span>${e.name}</span>
-                </div>
-            `
+      e =>`
+     
+                  <li class='country-list__item'>
+                      <img class='country-list__flag' alt='${e.name}' src='${e.flag}'
+                          width="30"
+                      >
+                      <span>${e.name}</span>
+                  </li>`
     )
-    .join('');
+   .join('');
 }
 
 function renderSingleCountry(res) {
